@@ -61,7 +61,7 @@ const App = () => {
   }
 
   /*
-  setTimeout(
+  setTimeout(             // No se debe poner un setTimeout ni setInterval aquí porque se ejecuta en cada renderizado y hace que de problemas.
     () => setCounter(counter + 1),
     1000
   )
