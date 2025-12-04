@@ -2,17 +2,27 @@ import { useState } from 'react'
 
 // un lugar adecuado para definir un componente
 const Statistics = ({good, neutral, bad}) => {
-  return (
+  if (good === 0 && neutral === 0 && bad === 0) {
+    return (
       <>
         <h1>statistics</h1>
-        <div>good {good}</div>
-        <div>neutral {neutral}</div>
-        <div>bad {bad}</div>
-        <div>all {good + neutral + bad}</div>
-        <div>average {good - bad}</div>
-        <div>positive {good / (good + neutral + bad)}</div>
+        <div>No feedback given</div>
       </>
-  )
+    )
+  } 
+  else {
+    return (
+        <>
+          <h1>statistics</h1>
+          <div>good {good}</div>
+          <div>neutral {neutral}</div>
+          <div>bad {bad}</div>
+          <div>all {good + neutral + bad}</div>
+          <div>average {good - bad}</div>
+          <div>positive {good / (good + neutral + bad)}</div>
+        </>
+    )
+  }
 }
 
 const App = () => {
@@ -35,15 +45,14 @@ const App = () => {
     console.log('bad clicked')
     setBad(bad + 1)
   }
-
   return (
-    <div>
-      <h1>give feedback</h1>
-      <button onClick={handleGoodClick}>good</button>
-      <button onClick={handleNeutralClick}>neutral</button>
-      <button onClick={handleBadClick}>bad</button>
-      <Statistics good={good} neutral= {neutral} bad={bad}/>
-    </div>
+  <div>
+    <h1>give feedback</h1>
+    <button onClick={handleGoodClick}>good</button>
+    <button onClick={handleNeutralClick}>neutral</button>
+    <button onClick={handleBadClick}>bad</button>
+    <Statistics good={good} neutral= {neutral} bad={bad}/>
+  </div>
   )
 }
 export default App
