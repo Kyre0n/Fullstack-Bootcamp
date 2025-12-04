@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
-const StatisticLine = ({text, value}) => <div>{text} {value}</div>
+const StatisticLine = ({text, value}) => <tr><td>{text}</td><td>{value}</td></tr>
 
 // un lugar adecuado para definir un componente
 const Statistics = ({good, neutral, bad}) => {
@@ -10,21 +10,25 @@ const Statistics = ({good, neutral, bad}) => {
     return (
       <>
         <h1>statistics</h1>
-        <div>No feedback given</div>
+        <>No feedback given</>
       </>
     )
   } 
   else {
     return (
-        <>
-          <h1>statistics</h1>
-          <StatisticLine text="good" value={good}/>
-          <StatisticLine text="neutral" value={neutral}/>
-          <StatisticLine text="bad" value={bad}/>
-          <StatisticLine text="all" value={good + neutral + bad}/>
-          <StatisticLine text="average" value={good - bad}/>
-          <StatisticLine text="positive" value={good / (good + neutral + bad)}/>
-        </>
+      <>
+        <h1>statistics</h1>
+        <table>
+          <tbody>
+            <StatisticLine text="good" value={good}/>
+            <StatisticLine text="neutral" value={neutral}/>
+            <StatisticLine text="bad" value={bad}/>
+            <StatisticLine text="all" value={good + neutral + bad}/>
+            <StatisticLine text="average" value={good - bad}/>
+            <StatisticLine text="positive" value={good / (good + neutral + bad)}/>
+          </tbody>
+        </table>
+      </>
     )
   }
 }
@@ -50,13 +54,13 @@ const App = () => {
     setBad(bad + 1)
   }
   return (
-  <div>
+  <>
     <h1>give feedback</h1>
     <Button onClick={handleGoodClick} text="good"/>
     <Button onClick={handleNeutralClick} text="neutral"/>
     <Button onClick={handleBadClick} text="bad"/>
-    <Statistics good={good} neutral= {neutral} bad={bad}/>
-  </div>
+    <Statistics good={good} neutral={neutral} bad={bad}/>
+  </>
   )
 }
 export default App
