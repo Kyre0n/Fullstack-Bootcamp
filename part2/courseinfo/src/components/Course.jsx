@@ -4,7 +4,7 @@ const Content = ({part}) => <p>{part.name} {part.exercises}</p>
 
 const Total = ({parts}) => parts.reduce((s, p) => {
     s += p.exercises
-    console.log('What is happening', s, p.exercises)
+    //console.log('What is happening', s, p.exercises)
     return s
 },0)
 
