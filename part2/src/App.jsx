@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Note from './components/Note'
 
 const App = ({notes}) => {
