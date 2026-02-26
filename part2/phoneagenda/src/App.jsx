@@ -13,12 +13,17 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const personObject = {
-      name: newName
-    }
+    if(!persons.find(person => person.name === newName)) {
+      const personObject = {
+        name: newName
+      }
 
-    setPersons(persons.concat(personObject))
-    setNewName('')
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    } else {
+      alert(`${newName} ya está añadido en la agenda`)
+    }
+    
   }
 
   return (
