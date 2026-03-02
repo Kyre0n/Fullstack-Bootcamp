@@ -105,8 +105,8 @@ useEffect(() => {
         {notesToShow.map((note, i) => 
           <Note
             key={i}
-            note={note} 
-            toggleImportance={() => toggleImportanceOf(note.id)}          
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
           />
         )}
       </ul>
