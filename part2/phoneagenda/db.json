@@ -29,6 +29,11 @@
       "id": "984c",
       "name": "qwerty",
       "number": "12345678"
+    },
+    {
+      "id": "a914",
+      "name": "prueba1",
+      "number": "1234"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
