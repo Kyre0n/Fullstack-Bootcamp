@@ -33,19 +33,22 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    if(!persons.find(person => person.name === newName)) {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
-
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+    const personFound = persons.find(person => person.name === newName)
+    if(!personFound) {
       personService
         .create(personObject)
         .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
       setNewName('')
       setNewNumber('')
     } else {
-      alert(`${newName} ya está añadido en la agenda`)
+      if(!window.confirm(`${personFound.name} is already added to phonebook, replace the old number with a new one?`)) return
+      personService
+        .update(personFound.id,personObject)
+        .then(returnedPerson => setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson)))
     }
   }
 
@@ -65,7 +68,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} removePerson={removePerson}/>
+      <Persons persons={persons} newFilter={newFilter} removePerson={removePerson} />
     </div>
   )
 }
