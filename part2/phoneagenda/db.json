@@ -4,26 +4,6 @@
       "name": "qwerty",
       "number": "4",
       "id": "461d"
-    },
-    {
-      "id": "75c9",
-      "name": "asdf",
-      "number": "1234567"
-    },
-    {
-      "id": "c8fc",
-      "name": "dfghjk",
-      "number": "4325678"
-    },
-    {
-      "name": "qwer",
-      "number": "234680",
-      "id": "fd06"
-    },
-    {
-      "id": "8e14",
-      "name": "qwe",
-      "number": "234680"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
