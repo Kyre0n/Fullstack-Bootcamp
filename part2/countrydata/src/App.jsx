@@ -17,12 +17,15 @@ function App() {
     setSelectedCountry(Event.target.value)
   }
 
+  const showCountry = (countryName) => {
+    setSelectedCountry(countryName)
+  }
 
 
   return (
     <div>
       find countries <input value={selectedCountry} onChange={handleCountryChange} />
-      <Countries countries={countries} selectedCountry={selectedCountry} />
+      <Countries countries={countries} selectedCountry={selectedCountry} showCountry={showCountry} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-const Countries = ({ countries = [], selectedCountry = '' }) => {
+const Countries = ({ countries = [], selectedCountry = '', showCountry }) => {
     const query = selectedCountry.toLowerCase()
     const result = countries.filter(country =>
             country.name.common.toLowerCase().includes(query)
@@ -27,7 +27,7 @@ const Countries = ({ countries = [], selectedCountry = '' }) => {
     return (
         <div>
             {result.map(country => (
-                <p key={country.cca3}>{country.name.common}</p>
+                <p key={country.cca3}>{country.name.common} <button onClick={() => showCountry(country.name.common)}>Show</button></p>
             ))}
         </div>
     )
