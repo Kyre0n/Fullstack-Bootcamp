@@ -1,38 +1,14 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const Note = require('./models/note')
-const mongoose = require('mongoose')
-const password = process.argv[2]
-// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
-const url =
-  `mongodb+srv://samu21578_db_user:${password}@cluster0.rgcajfr.mongodb.net/noteApp?appName=Cluster0`
 
 app.use(express.static('dist'))
-
 app.use(cors())
-
 app.use(express.json())
 
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.id
-    delete returnedObject.__v
-  }
-})
-
-const Note = mongoose.model('Note', noteSchema)
-
+/*
 let notes = [
     {
         id: 1,
@@ -50,6 +26,7 @@ let notes = [
         important: true
     }
 ]
+*/
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -71,6 +48,7 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
+/*
 app.get('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   const note = notes.find(note => note.id === id)
@@ -80,14 +58,52 @@ app.get('/api/notes/:id', (request, response) => {
     response.status(404).end()
   }
 })
+*/
 
+app.get('/api/notes/:id', (request, response, next) => {
+  Note.findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
+
+/*
 app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   notes = notes.filter(note => note.id !== id)
 
   response.status(204).end()
 })
+*/
 
+app.delete('/api/notes/:id', (request, response, next) => {
+  Note.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/notes/:id', (request, response, next) => {
+   const { content, important } = request.body
+
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true , runValidators: true, context: 'query' }
+  )
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
+/*
 const generateId = () => {
   const maxId = notes.length > 0
     ? Math.max(...notes.map(n => n.id))
@@ -99,8 +115,8 @@ app.post('/api/notes', (request, response) => {
   const body = request.body
 
   if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
+    return response.status(400).json({
+      error: 'content missing'
     })
   }
 
@@ -114,12 +130,46 @@ app.post('/api/notes', (request, response) => {
 
   response.json(note)
 })
+*/
+
+app.post('/api/notes', (request, response, next) => {
+  const body = request.body
+
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+  })
+
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
+  .catch(error => next(error))
+})
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
+
+// este debe ser el último middleware cargado, ¡también todas las rutas deben ser registrada antes que esto!
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
