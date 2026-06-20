@@ -70,6 +70,30 @@ test('When added a blog without the field likes is 0 by default', async () => {
   expect(response.body[response.body.length - 1].likes).toBe(0)
 })
 
+test('When trying to add a blog without title or url the server responds with a code 400 bad request', async () => {
+  const blogWithoutTitle = {
+    author: 'the outher one',
+    url: 'http://blogwithouttitle.com',
+    likes: 0
+  }
+
+  const blogWithoutUrl = {
+    title: 'BlogWithoutURL',
+    author: 'another one',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutUrl)
+    .expect(400)
+})
+
 afterAll(() => {
   server.close()
   mongoose.connection.close()
