@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 
-const mongoUrl = config.MONGODB_URI
+const mongoUrl = config.CONNECTION_STRING
 mongoose.connect(mongoUrl)
 
 app.use(cors())
