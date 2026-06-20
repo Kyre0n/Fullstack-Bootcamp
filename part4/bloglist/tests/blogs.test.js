@@ -45,8 +45,7 @@ test('When a blog is added the number of blogs are correct and the blog is corre
   }
 
   const blog = new Blog(blogToAdd)
-  await blog
-    .save()
+  await blog.save()
 
   const response = await api.get('/api/blogs')
   expect(response.body).toHaveLength(3)
@@ -55,6 +54,20 @@ test('When a blog is added the number of blogs are correct and the blog is corre
   expect(response.body[response.body.length - 1].url).toBe('http://blog3.com')
   expect(response.body[response.body.length - 1].likes).toBe(0)
   // expect(response.body).toContainEqual(blogToAdd)
+})
+
+test('When added a blog without the field likes is 0 by default', async () => {
+  const blogWithoutLikes = {
+    title: 'BlogWithoutLikes',
+    author: 'No one',
+    url: 'http://www.blogwithoutlikes.com'
+  }
+
+  const blog = new Blog(blogWithoutLikes)
+  await blog.save()
+
+  const response = await api.get('/api/blogs')
+  expect(response.body[response.body.length - 1].likes).toBe(0)
 })
 
 afterAll(() => {
