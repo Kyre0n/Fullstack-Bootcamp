@@ -3,7 +3,7 @@ const supertest = require('supertest')
 
 const { app, server } = require('../index')
 const Blog = require('../models/blog')
-const initialBlogs = require('./test_helper')
+const { initialBlogs, blogsInDB } = require('./test_helper')
 
 const api = supertest(app)
 
@@ -92,6 +92,19 @@ test('When trying to add a blog without title or url the server responds with a 
     .post('/api/blogs')
     .send(blogWithoutUrl)
     .expect(400)
+})
+
+test('Deleting a blog is done successfully', async () => {
+  const blogs = await api.get('/api/blogs')
+  const blogToDelete = blogs.body[0]
+
+  await api
+    .delete('/api/blogs/' + blogToDelete.id)
+    .expect(204)
+
+  const blogsAtEnd = await blogsInDB()
+  expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1)
+  expect(blogsAtEnd.find(blog => blog.id === blogToDelete.id)).toBeUndefined()
 })
 
 afterAll(() => {
