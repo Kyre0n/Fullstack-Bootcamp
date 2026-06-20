@@ -36,6 +36,27 @@ test('The blog identifier is returned as id instead of _id', async () => {
   expect(response.body[0]._id).toBeUndefined()
 })
 
+test('When a blog is added the number of blogs are correct and the blog is correct', async () => {
+  const blogToAdd = {
+    title: 'Blog3',
+    author: 'him',
+    url: 'http://blog3.com',
+    likes: 0
+  }
+
+  const blog = new Blog(blogToAdd)
+  await blog
+    .save()
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(3)
+  expect(response.body[response.body.length - 1].title).toBe('Blog3')
+  expect(response.body[response.body.length - 1].author).toBe('him')
+  expect(response.body[response.body.length - 1].url).toBe('http://blog3.com')
+  expect(response.body[response.body.length - 1].likes).toBe(0)
+  // expect(response.body).toContainEqual(blogToAdd)
+})
+
 afterAll(() => {
   server.close()
   mongoose.connection.close()
