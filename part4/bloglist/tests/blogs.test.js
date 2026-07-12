@@ -107,6 +107,14 @@ test('Deleting a blog is done successfully', async () => {
   expect(blogsAtEnd.find(blog => blog.id === blogToDelete.id)).toBeUndefined()
 })
 
+test('Updated blog is updated correctly', async () => {
+  const blogs = await api.get('/api/blogs')
+  const blogToUpdate = blogs.body[0]
+
+  await api
+    .put('/api/blogs')
+})
+
 afterAll(() => {
   server.close()
   mongoose.connection.close()
