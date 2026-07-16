@@ -13,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
+app.use('/api/login', require('./controllers/login'))
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
