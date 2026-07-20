@@ -11,37 +11,27 @@ const api = supertest(app)
 beforeEach(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
-  console.log('Despues de borrar la BBDD')
 
   await api
     .post('/api/users')
     .send(initialUsersBlogs[0])
-  console.log(initialUsersBlogs[0])
-  console.log('Despues de guardar el user en el BeforeEach')
-  console.log(userLogin)
   const loginResponse = await api
     .post('/api/login')
     .send(userLogin)
 
   const token = loginResponse.body.token
-  console.log(token)
-
-  console.log(await User.find({}))
 
   await api
     .post('/api/blogs')
     .set('Authorization', `Bearer ${token}`)
     .send(initialBlogs[0])
     .expect(201)
-  console.log('Despues de insertar el primer Blog')
 
   await api
     .post('/api/blogs')
     .set('Authorization', `Bearer ${token}`)
     .send(initialBlogs[1])
     .expect(201)
-  console.log('Despues de insertar el segundo Blog')
-  console.log('Termina beforeEach')
 })
 
 test('Blogs are returned as json and with code 200', async () => {
@@ -64,7 +54,6 @@ test('The blog identifier is returned as id instead of _id', async () => {
 })
 
 test('When a blog is added the number of blogs are correct and the blog is correct', async () => {
-  console.log('Sale esto?')
   const blogToAdd = {
     title: 'Blog3',
     author: 'him',
@@ -72,15 +61,12 @@ test('When a blog is added the number of blogs are correct and the blog is corre
     likes: 0
   }
 
-  console.log('AntesLogin')
   const loginResponse = await api
     .post('/api/login')
     .send(userLogin)
 
   const token = loginResponse.body.token
 
-  console.log(token)
-  console.log('pruebaToken')
   await api
     .post('/api/blogs')
     .set('Authorization', `Bearer ${token}`)
@@ -147,8 +133,16 @@ test('Deleting a blog is done successfully', async () => {
   const blogs = await api.get('/api/blogs')
   const blogToDelete = blogs.body[0]
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send(userLogin)
+
+  const token = loginResponse.body.token
+
   await api
     .delete('/api/blogs/' + blogToDelete.id)
+    .set('Authorization', `Bearer ${token}`)
+
     .expect(204)
 
   const blogsAtEnd = await blogsInDB()
