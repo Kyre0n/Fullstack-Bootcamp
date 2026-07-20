@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
-const { app, server } = require('../index')
+const app = require('../app')
 const User = require('../models/user')
 const { initialUsers, usersInDB } = require('./test_helper.js')
 
@@ -86,6 +86,5 @@ describe('Users', () => {
 })
 
 afterAll(() => {
-  server.close()
   mongoose.connection.close()
 })
