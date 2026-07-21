@@ -109,7 +109,6 @@ test('When trying to add a blog without title or url the server responds with a 
     likes: 0
   }
 
-  console.log('AntesLogin')
   const loginResponse = await api
     .post('/api/login')
     .send(userLogin)
@@ -142,7 +141,6 @@ test('Deleting a blog is done successfully', async () => {
   await api
     .delete('/api/blogs/' + blogToDelete.id)
     .set('Authorization', `Bearer ${token}`)
-
     .expect(204)
 
   const blogsAtEnd = await blogsInDB()

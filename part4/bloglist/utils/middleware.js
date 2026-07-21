@@ -1,13 +1,29 @@
-const TokenExtractor = (request, response, next) => {
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
-  console.log('Dentro antes')
   if (authorization && authorization.startsWith('Bearer ')) {
-    console.log('Dentro despues')
     const token = authorization.replace('Bearer ', '')
     request.token = token
   } else {
-    console.log('Dentro antes de return null')
     request.token = null
+  }
+  next()
+}
+
+const userExtractor = async (request, response, next) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
+  if (!user) {
+    request.user = null
+    return response.status(400).json({ error: 'user not found' })
+  } else {
+    request.user = user
   }
   next()
 }
@@ -35,7 +51,8 @@ const errorHandler = (error, request, response, next) => {
 }
 
 module.exports = {
-  TokenExtractor,
+  tokenExtractor,
+  userExtractor,
   unknownEndpoint,
   errorHandler
 }

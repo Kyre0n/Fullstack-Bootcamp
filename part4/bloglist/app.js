@@ -10,7 +10,7 @@ mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
-app.use(middleware.TokenExtractor)
+app.use(middleware.tokenExtractor)
 
 app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
