@@ -81,6 +81,20 @@ test('When a blog is added the number of blogs are correct and the blog is corre
   // expect(response.body).toContainEqual(blogToAdd)
 })
 
+test('If the token is not send responds with a 401 status', async () => {
+  const blogToAdd = {
+    title: 'Blog3',
+    author: 'him',
+    url: 'http://blog3.com',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(401)
+})
+
 test('When added a blog without the field likes is 0 by default', async () => {
   const blogWithoutLikes = {
     title: 'BlogWithoutLikes',
