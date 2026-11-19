@@ -87,6 +87,8 @@ const App = () => {
     }
   }
 
+  const blogsOrdenados = [...blogs].sort((a, b) => b.likes - a.likes)
+
   if (user === null) {
     return (
       <div>
@@ -107,7 +109,7 @@ const App = () => {
         handleCreateBlog={handleCreateBlog}
       />
       {
-        blogs.map(blog =>
+        blogsOrdenados.map(blog =>
           <Blog key={blog.id} blog={blog} handleUpdateLikes={handleUpdateLikes} />
         )
       }
